@@ -1,0 +1,62 @@
+{% extends 'algorithm/base.html' %}
+{% block title %}Contact me{% endblock %}
+{% block content %}
+        <div class="col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <h4>Send a message</h4>
+                </div>
+            </div>
+            <div class="panel-body">
+                <p>Hello there !<br>Thanks to visiting this page. I hope that you enjoyed.<br>
+                You can send me any opinion about your experience to improve this project<br>
+                Any other words will be accepted. :D
+                    <br>
+                    Don't Hack Dear Hacker
+                <br><br>
+                    Mahdi Khanmohammadi
+                    <br>
+                April ,2018
+                    <br>
+                Zanjan University
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <h4>Send a message</h4>
+                </div>
+            </div>
+            <div class="panel-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <table class="table table-responsive">
+                        <tr>
+                            <td>Name</td>
+                            <td>{{ form.name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>{{ form.email }}</td>
+                        </tr>
+                        <tr>
+                            <td>Message</td>
+                            <td>{{ form.message }}</td>
+                        </tr>
+                        {% if form.errors %}
+                            <tr>
+                                <td>Error</td>
+                                <td>{{ form.errors }}</td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                    <center><input type="submit" id="send" class="btn btn-primary" value="Send" /></center>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'algorithm/base.html' %}
+
+{% block content%}
+    <div class="col-md-6">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="panel-title"><h4>Input : NFA Machine</h4></div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-responsive">
+            {% csrf_token %}
+            <tr>
+                <td>Alphabets</td>
+                <td><input type="text" id="nfa_alphabet" class="form-control" value="a,b" /></td>
+            </tr>
+            <tr>
+                <td>States</td>
+                <td><textarea id="nfa_q" class="form-control" cols="50" rows="5">q0,q1,q2,q3,q4,q5,q6</textarea></td>
+            </tr>
+            <tr>
+                <td>Start State</td>
+                <td><input type="text" id="nfa_q0" class="form-control" value="q0"/></td>
+            </tr>
+            <tr>
+                <td>Final States</td>
+                <td><input type="text" id="nfa_f" class="form-control" value="q3,q6" /></td>
+            </tr>
+            <tr>
+                <td>Delta Function</td>
+                <td><textarea id="nfa_delta" class="form-control" cols="50" rows="5">(q0,L,q1),(q0,L,q4),(q1,a,q2),(q2,a,q2),(q2,b,q2),(q2,b,q3),(q4,b,q5),(q5,a,q5),(q5,b,q5),(q5,a,q6)</textarea></td>
+            </tr>
+            <tr>
+                <td>Errors</td>
+                <td><div id="error"></div></td>
+            </tr>
+        </table>
+        <center><input type="submit" id="result" class="btn btn-default" value="Convert"></center>
+        </div>
+    </div>
+    </div>
+    <div class="col-md-6">
+    <div class="panel panel-warning">
+        <div class="panel-heading">
+            <div class="panel-title"><h4>Output : DFA Machine</h4></div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-responsive">
+            <tr>
+                <td>Alphabets</td>
+                <td><div id="dfa_alphabet"></div></td>
+            </tr>
+            <tr>
+                <td>States</td>
+                <td><div id="dfa_q"></div></td>
+            </tr>
+            <tr>
+                <td>Start State</td>
+                <td><div id="dfa_q0"></div></td>
+            </tr>
+            <tr>
+                <td>Final States</td>
+                <td><div id="dfa_f"></div></td>
+            </tr>
+            <tr>
+                <td>Delta Function</td>
+                <td><div id="dfa_delta"></div></td>
+            </tr>
+        </table>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+<script>
+$('#result').click(function () {
+    if(!($('#nfa_alphabet').val() && $('#nfa_q').val()&& $('#nfa_q0').val() && $('#nfa_f').val() && $('#nfa_delta').val()))
+        $('#error').text("Do not submit blank");
+    else {
+        $.ajax({
+            url: '/ajax/nfatodfa/',
+            type: 'POST',
+            data: {
+                'alphabet': $('#nfa_alphabet').val(),
+                'q': $('#nfa_q').val(),
+                'q0': $('#nfa_q0').val(),
+                'f': $('#nfa_f').val(),
+                'delta': $('#nfa_delta').val(),
+                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+            },
+            dataType: 'json',
+            success: function (data) {
+                    $('#dfa_q').text(data.q)
+                    $('#dfa_alphabet').text(data.alphabet)
+                    $('#dfa_q0').text(data.q0)
+                    $('#dfa_f').text(data.f)
+                    $('#dfa_delta').text(data.delta)
+            }
+        })
+    }
+});
+</script>
+
+{% endblock %}
